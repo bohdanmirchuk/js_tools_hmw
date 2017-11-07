@@ -1,6 +1,13 @@
 h1 {
   color: red;
 }
+
 h2 {
   color: blue;
+}
+
+div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }

@@ -2,7 +2,12 @@
 
 var gulp = require('gulp');
 var clean = require('gulp-clean');
-var less = require('gulp-less');
+var sass = require('gulp-sass');
+var gulpSequence = require('gulp-sequence');
+var isProduction = process.env.NODE_ENV === 'production'; 
+var autoprefixer = require('gulp-autoprefixer');
+var eslint = require('gulp-eslint');
+
 // var browserSync = require('browser-sync').create();
 // var jshint = require('gulp-jshint');
 
@@ -11,13 +16,6 @@ var less = require('gulp-less');
 //     .pipe(jshint())
 //     .pipe(jshint.reporter('YOUR_REPORTER_HERE'));
 // });
-
-gulp.task('less', function(){
-  return gulp.src('./src/styles/*.less')
-  .pipe(less())
-  .pipe(gulp.dest('./src/styles'))
-  // .pipe(browserSync.stream())
-})
 
 // gulp.task('serve', ['less'], function(){
 //   browserSync.init({
@@ -41,6 +39,14 @@ gulp.task('views', function(){
   .pipe(gulp.dest('./dist/'));
 });
 
+//will check the style of code
+gulp.task('lint', function(){
+  gulp.src('./src/scripts/*.js')
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
+});
+
 //will copy all js files
 gulp.task('scripts', function(){
   gulp.src('./src/scripts/*.js')
@@ -49,7 +55,11 @@ gulp.task('scripts', function(){
 
 //will copy all css files
 gulp.task('styles', function(){
-  gulp.src('./src/styles/*.css')
+  gulp.src('./src/styles/*.scss')
+  .pipe(sass({outputStyle: isProduction ? 'compressed' : "expanded"}).on('error', sass.logError))
+  .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false}))
   .pipe(gulp.dest('./dist/styles'));
 });
 
@@ -60,7 +70,7 @@ gulp.task('images', function(){
 });
 
 //will run the build proces
-gulp.task('build', ['clean', 'views', 'scripts', 'styles', 'images']);
+gulp.task('build', gulpSequence('lint', 'clean', ['views', 'scripts', 'styles', 'images']));
 
 //the default action
 gulp.task('default', ['build']);
