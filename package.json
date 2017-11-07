@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "gulp lint",
     "build": "NODE_ENV=production gulp build",
     "build:dev": "gulp build"
   },
@@ -17,6 +18,7 @@
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-react": "^7.4.0",
+    "git-scripts": "^0.2.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-clean": "^0.3.2",
@@ -29,5 +31,10 @@
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5",
     "uglify-js": "^3.1.7"
+  },
+  "git":{
+    "scripts":{
+    "pre-commit": "npm test"
+    }
   }
 }
