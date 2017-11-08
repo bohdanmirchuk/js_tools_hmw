@@ -12,7 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "^8.0.2",
-    "browser-sync": "^2.18.13",
     "eslint": "^4.10.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-config-airbnb-es5": "^1.2.0",
@@ -22,19 +21,23 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-clean": "^0.3.2",
+    "gulp-connect": "^5.0.0",
     "gulp-cssmin": "^0.2.0",
     "gulp-eslint": "^4.0.0",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-jshint": "^2.0.4",
-    "gulp-less": "^3.3.2",
+    "gulp-noop": "^1.0.0",
     "gulp-sass": "^3.1.0",
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5",
+    "sprity": "^1.0.8",
     "uglify-js": "^3.1.7"
   },
-  "git":{
-    "scripts":{
-    "pre-commit": "npm test"
+  "git": {
+    "scripts": {
+      "pre-commit": "npm test"
     }
-  }
+  },
+  "dependencies": {}
 }

@@ -7,25 +7,9 @@ var gulpSequence = require('gulp-sequence');
 var isProduction = process.env.NODE_ENV === 'production'; 
 var autoprefixer = require('gulp-autoprefixer');
 var eslint = require('gulp-eslint');
-
-// var browserSync = require('browser-sync').create();
-// var jshint = require('gulp-jshint');
-
-// gulp.task('lint', function() {
-//   return gulp.src('./src/scripts/*.js')
-//     .pipe(jshint())
-//     .pipe(jshint.reporter('YOUR_REPORTER_HERE'));
-// });
-
-// gulp.task('serve', ['less'], function(){
-//   browserSync.init({
-//     server: './'
-//   });
-
-//   gulp.watch('styles/*.less', ['less']);
-//   gulp.watch('*.html').on('change', browserSync.reload);
-
-// })
+var connect = require('gulp-connect');
+var htmlmin = require('gulp-htmlmin');
+var noop = require('gulp-noop');
 
 //will clean the dist directory
 gulp.task('clean', function(){
@@ -36,6 +20,7 @@ gulp.task('clean', function(){
 //will copy all html files
 gulp.task('views', function(){
   gulp.src('./src/*.html')
+  .pipe(isProduction ? htmlmin({collapseWhitespace: true}) : noop()) 
   .pipe(gulp.dest('./dist/'));
 });
 
@@ -69,8 +54,26 @@ gulp.task('images', function(){
   .pipe(gulp.dest('./dist/images'));
 });
 
+//server and livereload
+gulp.task('watch', function () {
+  gulp.watch('./src/styles/*.scss', ['styles']);
+  gulp.watch('./src/*.html', ['views', 'reload-html']);
+});
+
+gulp.task('server', function(){
+  connect.server({
+    root: 'dist',
+    livereload: true,
+  });
+})
+
+gulp.task('reload-html', function () {
+  gulp.src('./dist/*.html')
+  .pipe(connect.reload());
+})
+
 //will run the build proces
-gulp.task('build', gulpSequence('lint', 'clean', ['views', 'scripts', 'styles', 'images']));
+gulp.task('build', gulpSequence('clean', ['views', 'scripts', 'styles', 'images']));
 
 //the default action
-gulp.task('default', ['build']);
+gulp.task('default', gulpSequence('lint', 'build', 'server', 'watch'));
